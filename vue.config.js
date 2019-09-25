@@ -1,4 +1,4 @@
 module.exports = {
-  publicPath: '/vue-composition-api-demo/',
-  outputDir: 'docs',
+  publicPath: '/',
+  outputDir: 'build',
 }
