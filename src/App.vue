@@ -1,6 +1,5 @@
 <template>
   <div class="main">
-    vue3.0 尝鲜
     <HelloWord></HelloWord>
   </div>
 </template>
