@@ -1,4 +1,6 @@
 import Vue from 'vue'
+
+// 先通过 Vue.use() 进行安装
 import VueCompositionApi from '@vue/composition-api'
 Vue.use(VueCompositionApi)
 

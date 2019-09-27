@@ -3,6 +3,9 @@
     <button @click="increment">
       Count is: {{ state.count }}, double is: {{ state.double }}
     </button>
+    <span>鼠标移动坐标: </span>
+    <span> {{x}}</span>
+    <span> {{y}}</span>
   </div>
 </template>
 
@@ -10,6 +13,8 @@
 // 参考
 // https://vue-composition-api-rfc.netlify.com/
 // https://juejin.im/post/5d836458f265da03d871f6e9
+// 更多 api 相关的详细用法可以参考
+// https://vue-composition-api-rfc.netlify.com/api.html#setup
 import { 
   reactive, 
   computed,
@@ -18,10 +23,13 @@ import {
   onMounted
 } from '@vue/composition-api'
 
+import { useMousePosition } from './mouse'
+
 export default {
   name: 'HelloWorld',
   // 这里的 state 就像旧 api 的 data
   setup() {
+
     const state = reactive({
       count: 0,
       // 那么问题来了，这里的 double 为什么可以在 template 里面不用 value 来访问呢
@@ -29,6 +37,7 @@ export default {
       // 上下文就直接暴露了其 value, 所以你在 template 中写的时候就不用加 double.value 了
       double: computed(() => state.count * 2) 
     })
+
 
     // 还有像这种情况，只要是 ref 作为 【属性】 嵌套在一个对象(比如上面的 state) 中
     // 那么就不用写 state.double.value 来访问它了(因为此时是 undefined)
@@ -69,6 +78,8 @@ export default {
 
 
     // 像生命周期钩子之类的一般就是用 onXXX 这种来代替了，如
+    // 这里钩子有很多，但是 Vue3.0 除去了 beforeCreate 和 created
+    // 因为这些都可以在 setup() 这个函数里面做
     onMounted(() => {
       console.log('组件挂载了')
     })
@@ -83,10 +94,13 @@ export default {
     // https://gist.github.com/yyx990803/8854f8f6a97631576c14b63c8acd8f2e
     // 每个逻辑关注点的代码现在都被组合在一个复合函数中。你也就没必要跳来跳去的看了
 
+    const {x, y} = useMousePosition()
+
     // 这里必须要 return, 只有 return 了 template 才能用到
     return {
       state,
-      increment
+      increment,
+      x, y
     }
   }
 }
