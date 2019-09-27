@@ -1,7 +1,7 @@
 <template>
   <div>
     <button @click="increment">
-      Count is: {{ state.count }}, double is: {{ state.double }}
+      Count is: {{ state.count }} double is {{ state.double }}
     </button>
     <span>鼠标移动坐标: </span>
     <span> {{x}}</span>
@@ -38,21 +38,27 @@ export default {
       double: computed(() => state.count * 2) 
     })
 
+    const xxx = ref(0)
+    console.log('xxx is ', xxx)
+
+    // 这里就像旧 api 的 methods
+    function increment() {
+      // state.count++
+      xxx.value += 1
+      console.log('state.count', state.count)
+    }
 
     // 还有像这种情况，只要是 ref 作为 【属性】 嵌套在一个对象(比如上面的 state) 中
     // 那么就不用写 state.double.value 来访问它了(因为此时是 undefined)
-    console.log('state.double.value =', state.double.value)
-    console.log('state.double =', state.double)
+    // console.log('state.double.value =', state.double.value)
+    // console.log('state.double =', state.double)
 
     // 有时候我们需要编写这样的代码，就是一个 state 依赖另一个 state 的时候，
     // 一般用 computed 来操作
     // Vue3.0 computed 返回什么呢？它返回的是一个对象, 这个对象也是响应式的
-    const xxx = computed(() => state.count * 2)  
+    const zzz = computed(() => state.count * 2)  
+    console.log('zzz', zzz)
 
-    // 这里就像旧 api 的 methods
-    function increment() {
-      state.count++
-    }
 
     // 这里就像 watch
     watch(() => {
@@ -61,17 +67,18 @@ export default {
       // 显而易见 xxx 在这里就是一个对象，在 Vue3.0 里面称之为 "ref"
       // 而这个 ref 在 Vue3.0 中就是一个【响应式的引用】，当然在渲染 DOM 的时候这个 refs 也是保留了的
       div.innerHTML = `count is ${state.count}, double is ${state.double}, xxx is ${xxx.value}`
+      // div.innerHTML = `count is ${state.count}, double is ${state.double}`
       document.body.append(div)
     })
 
     // 当然除了使用 computed 这个 api 创建 ref 响应式引用之外，也可以用 ref 这个 API 来创建【响应式引用】
     // 比如
-    const yyy = ref(0)
-    console.log('yyy.value =', yyy.value)
-    yyy.value += 1
-    console.log('yyy.value =', yyy.value)
+    // const yyy = ref(0)
+    // console.log('yyy.value =', yyy.value)
+    // yyy.value += 1
+    // console.log('yyy.value =', yyy.value)
 
-    console.log('yyy =', yyy)
+    // console.log('yyy =', yyy)
 
     // 所以什么时候该使用 ref ,什么时候使用 reactive 呢
     // https://vue-composition-api-rfc.netlify.com/#ref-vs-reactive
@@ -82,6 +89,7 @@ export default {
     // 因为这些都可以在 setup() 这个函数里面做
     onMounted(() => {
       console.log('组件挂载了')
+      // alert('组件挂载了')
     })
 
     // Vue 用这种组合类型的 api 的用意是啥呢，为了 【更方便的组织代码，使代码的可读性变高】
@@ -97,6 +105,11 @@ export default {
     const {x, y} = useMousePosition()
 
     // 这里必须要 return, 只有 return 了 template 才能用到
+    // return {
+    //   state,
+    //   increment,
+    //   x, y
+    // }
     return {
       state,
       increment,
